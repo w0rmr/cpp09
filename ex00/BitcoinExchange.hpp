@@ -1,14 +1,17 @@
 #include <iostream>
 #include <map>
+#include <vector>
 #include <string>
 
 class btc {
     private:
         std::string data_path;
         std::string input_path;
+        std::vector<std::string> data;
         std::map<std::string ,std::string > data;
         bool check_errors(void);
         void parse_file(void);
+        void print(void);
         void add_to_data(std::string line);
     public:
         btc();

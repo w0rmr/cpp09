@@ -10,8 +10,10 @@ btc::btc(std::string file_path) :input_path(file_path){
 }
 
 void btc::add_to_data(std::string line){
-    
+    (void) line ;
 
+}
+void btc::print(void){
 
 }
 
