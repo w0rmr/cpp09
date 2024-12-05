@@ -3,9 +3,8 @@
 int main(int ac , char **av){
     try{
         if(ac == 2){
-            btc bt;
-            bt.input_(av[1]);
-            bt.data_("./data.csv");
+            btc bt(av[1],"./data.csv");
+        
             std::cout << bt << std::endl;
         }else
             throw std::bad_optional_access();

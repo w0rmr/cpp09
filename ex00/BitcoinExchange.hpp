@@ -10,7 +10,8 @@ class btc {
         std::string data_path;
         std::string input_path;
         std::map<std::string ,float > data;
-        bool check_errors(void);
+        bool check_date(std::string date);
+        void check_and_print(void);
         void parse_file(void);
         void print(void);
         void add_to_data(std::string);
@@ -21,7 +22,7 @@ class btc {
         btc();
         void data_(std::string path);
         void input_(std::string input);
-        btc(std::string file_path);
+        btc(std::string file_path,std::string csv_path);
         ~btc();
 };
 
