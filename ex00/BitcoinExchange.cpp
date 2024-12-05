@@ -21,6 +21,12 @@ void btc::parse_file(void){
 }
 
 bool btc::check_errors(void){
+    std::ifstream file(input_path);
+    std::string line;
+    while(std::getline(file,line)){
+
+    }
+    file.close();
     return true;
 }
 
@@ -36,8 +42,71 @@ std::ostream &operator<<(std::ostream &o , btc &BTC){
     return o;
 }
 
+bool btc::isdigit_(std::string nbr){
+    for(unsigned long i = 0 ; i < nbr.size() ;i++)
+        if(!isdigit(nbr[i]))
+            return false;
+    return true;
+
+}
+
+bool btc::isdigit_(std::string nbr,char ignor){
+    for(unsigned long i = 0 ; i < nbr.size() ;i++)
+        if(!isdigit(nbr[i]) && nbr[i] != ignor)
+            return false;
+    return true;
+
+}
+
+bool btc::check_data(std::string data,int order){
+    if (order == 1){ 
+        if(data.size() > 10)
+            return false;
+        else if(data[4] != data[7] &&  data[7] != '-')
+            return false ;
+        char *cstr = new char[data.size() + 1];
+        cstr = std::strcpy(cstr,data.c_str());
+        char * value = strtok(cstr,"-");
+        while (value)
+        {
+            // std::cout << value << std::endl;
+            if(!isdigit_(value))
+                return false;
+            value = strtok(NULL,"-");
+        }
+        delete[] cstr;
+    }else if(order == 2)
+    {
+        if(!isdigit_(data,'.'))
+            return false;
+    }
+    return true;
+
+}
+
 void btc::data_(std::string path){
     data_path = path;
-    std::cout << "data path => " << data_path << std::endl;
+    std::string line;
+    std::ifstream file(data_path);
+    std::getline(file, line);
+    while(std::getline(file,line)){
+        char *cstr = new char[line.size() + 1];
+        std::strcpy(cstr, line.c_str());
+        char *key = strtok(cstr,",");
+        char *value = strtok(NULL,",");
+        if(!check_data(key,1) ||  !check_data(value,2))
+            throw std::bad_exception();
+        if(key && value)
+            data[key] = (float)std::strtof(value,NULL);
+        else if( strtok(NULL,",") != NULL){
+            delete[] cstr;
+            throw std::bad_exception();
+        }else{
+            delete[] cstr;
+            throw std::bad_optional_access();
+        }
+        delete[] cstr;
+        }
+    file.close();
 }
 

@@ -2,7 +2,7 @@ Target = btc
 
 CC = c++
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
+FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 FILES = main.cpp BitcoinExchange.cpp 
 

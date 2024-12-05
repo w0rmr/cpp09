@@ -9,7 +9,7 @@ int main(int ac , char **av){
             std::cout << bt << std::endl;
         }else
             throw std::bad_optional_access();
-    }catch(std::bad_optional_access &e){
+    }catch(...){
         std::cerr << "baaaad tripppp " << std::endl;
     }
     return 0;
