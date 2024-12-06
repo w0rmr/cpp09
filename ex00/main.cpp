@@ -1,17 +1,15 @@
 #include "BitcoinExchange.hpp"
 
 int main(int ac , char **av){
-    try{
-        if(ac == 2){
-            btc bt(av[1],"./data.csv");
-            std::cout << bt << std::endl;
-        }else
-            throw std::bad_optional_access();
-    }catch(...){
-        std::cerr << "baaaad tripppp " << std::endl;
-    }
+    if(ac == 2)
+        btc bt(av[1],"./data.csv");
+    else
+        std::cerr << "Error: could not open file." << std::endl;
     return 0;
 }
+
+
+
 // 2011-01-03 => 3 = 0.9
 // 2011-01-03 => 2 = 0.6
 // 2011-01-03 => 1 = 0.3

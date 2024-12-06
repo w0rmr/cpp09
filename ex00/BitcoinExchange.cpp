@@ -1,43 +1,22 @@
 #include "BitcoinExchange.hpp"
 #include <exception>
+#include <limits>
 btc::btc(){}
 btc::~btc(){}
 btc::btc(std::string file_path, std::string csv_path){
     data_(csv_path);
-    std::cout << "pass data" << std::endl;
+    // std::cout << "pass data" << std::endl;
     input_(file_path);
 }
 
-void btc::add_to_data(std::string line){
-    (void) line ;
-
-}
-
-struct check_value
-{
-  check_value( std::string value ) : value_(value) {}
-  bool operator()( const std::pair<std::string, float>& v ) const 
-  { 
-    return (v.first == value_); 
-  }
-private:
-  std::string value_;
-};
-
-
-
-void btc::print(float rate , std::string date){
-    std::cout << "rate is -> " << rate << std::endl;
-    std::cout << date << " => " ;
-    if(std::find_if(data.begin(),data.end(),check_value(date)) != data.end()){
-        std::cout << "the value(1) is " << data.lower_bound(date)->second << std::endl;
-        std::cout << data.lower_bound(date)->second * rate;
-    }else{
-        std::cout << "the value(2) is " <<  data[date] << std::endl;
-        std::cout <<  data[date] * rate;
-    }
+void btc::print(float rate, const std::string date) {
+    std::cout << date << " => ";
+    std::map<std::string, float>::iterator it = data.find(date);
+    if (it != data.end())
+        std::cout << it->second * rate;
+    else
+        std::cout << data.upper_bound(date)->second * rate;
     std::cout << std::endl;
-
 }
 
 void btc::parse_file(void){
@@ -84,42 +63,51 @@ bool btc::check_date(std::string date){
     // int leap_year;
     std::istringstream stream(date);
     if (!(stream >> year >> dash1 >> month >> dash2 >> day) || dash1 != '-' || dash2 != '-') {
+        err_str = "bad input =>";
+        err_str += date;
         return false;
     }
-    else if (!check_year(year))
+    else if (!check_year(year) || !check_month(month) || !check_day(day,month,year)){
+        
+        err_str = "bad input =>";
+        err_str += date;
         return false;
-    else if (!check_month(month))
-        return false;
-    else if(!check_day(day,month,year))
-        return false;
+    }
     return true;
 }
-
+void btc::err(){
+    std::cerr << "Error: " << err_str << std::endl;
+}
 void btc::check_and_print(void){
     std::string line;
     std::ifstream file(input_path);
-    if(!file.is_open())
-        throw "baaad tripp";
+    if(!file.is_open()){
+        err_str = "could not open file.";
+        err();
+    }
     std::getline(file, line);
     while(std::getline(file,line)){
         char *cstr = new char[line.size() + 1];
         std::strcpy(cstr, line.c_str());
         char *key = strtok(cstr,"|");
         char *value = strtok(NULL,"|");
-        // std::cout << '\'' << key <<'\'' << value << '\'' << std::endl;
-        float float_v = (float)std::strtof(value,NULL);
-        if(!check_data(key,3) ||  !check_data(value,2) || !check_date(key) )
-            std::cerr << "invalid data";
-        if(key && value)
-            print(float_v,key);
-        else if( strtok(NULL,"|") != NULL){
-            delete[] cstr;
-            std::cerr << "vadeidheibd";
-        }else{
-            delete[] cstr;
-            std::cerr << "yazbiii";
+        if(!value || !key){
+            err_str = "bad input ";
+            if(!value && key)
+                err_str += " no value";
+            err();
         }
-        
+        else if(!check_data(key,3) ||  !check_data(value,2) || !check_date(key) || !check_data(key,3) ||  !check_data(value,2) || !check_date(key))
+            err();
+        else{
+            float float_v = std::strtof(value,NULL);
+            if(float_v >= INT_MAX){
+                err_str = "too large a number.";
+                err();
+            }
+            else 
+                print(float_v,key);
+        }
         delete[] cstr;
         }
     file.close();
@@ -149,12 +137,13 @@ bool btc::isdigit_(std::string nbr,char ignor){
     for(unsigned long i = 0 ; i < nbr.size() ;i++)
     {
         if(nbr[i]== '-'){
-            std::cerr << "nigatiiiiiiivvvv ya zbi" << std::endl;
+            err_str = "not a positive number.";
             return false;
-            // throw std::bad_exception();
         }
-        else if(!isdigit(nbr[i]) && nbr[i] != ignor && nbr[i] != ' ' )
+        else if(!isdigit(nbr[i]) && nbr[i] != ignor && nbr[i] != ' ' ){
+            err_str = "not a valid number.";
             return false;
+            }
     }
     return true;
 
@@ -173,8 +162,6 @@ bool btc::check_data(std::string data,int order){
         char * value = strtok(cstr,"-");
         while (value)
         {
-            // std::cout << '\'' << value << '\'' << std::endl;
-            // std::cout << value << std::endl;
             if(!isdigit_(value))
                 return false;
             value = strtok(NULL,"-");
@@ -185,7 +172,6 @@ bool btc::check_data(std::string data,int order){
         if(!isdigit_(data,'.'))
             return false;
     }
-    // std::cout << "pass the check" << std::endl;
     return true;
 
 }
@@ -194,24 +180,34 @@ void btc::data_(std::string path){
     data_path = path;
     std::string line;
     std::ifstream file(data_path);
-    if(!file.is_open())
-        throw "baaad tripp";
+    if(!file.is_open()){
+        err_str ="could not open file.";
+        err();
+        std::exit(1);
+    };
     std::getline(file, line);
     while(std::getline(file,line)){
         char *cstr = new char[line.size() + 1];
         std::strcpy(cstr, line.c_str());
         char *key = strtok(cstr,",");
         char *value = strtok(NULL,",");
-        if(!check_data(key,1) ||  !check_data(value,2))
-            throw std::bad_exception();
+        if(!check_data(key,1) ||  !check_data(value,2)){
+            err_str = "bad database.";
+            err();
+            exit(1);
+        };
         if(key && value)
             data[key] = (float)std::strtof(value,NULL);
         else if( strtok(NULL,",") != NULL){
             delete[] cstr;
-            throw std::bad_exception();
+            err_str = "bad database.";
+            err();
+            exit(1);
         }else{
             delete[] cstr;
-            throw std::bad_optional_access();
+            err_str = "bad database.";
+            err();
+            exit(1);
         }
         delete[] cstr;
         }

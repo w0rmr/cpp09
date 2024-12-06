@@ -19,9 +19,10 @@ class btc {
         bool check_month(unsigned int month);
         bool check_day(unsigned int day ,unsigned int month , unsigned int year);
         bool isleap(unsigned int year);
-        void add_to_data(std::string);
+        void err();
         bool check_data(std::string data, int order);
         bool isdigit_(std::string nbr);
+        std::string err_str;
         bool isdigit_(std::string nbr,char ignor);
     public:
         btc();
