@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <sstream>
 // #include <string>
 
 class btc {
@@ -13,7 +14,11 @@ class btc {
         bool check_date(std::string date);
         void check_and_print(void);
         void parse_file(void);
-        void print(void);
+        void print(float rate , std::string date); 
+        bool check_year(unsigned int year);
+        bool check_month(unsigned int month);
+        bool check_day(unsigned int day ,unsigned int month , unsigned int year);
+        bool isleap(unsigned int year);
         void add_to_data(std::string);
         bool check_data(std::string data, int order);
         bool isdigit_(std::string nbr);
