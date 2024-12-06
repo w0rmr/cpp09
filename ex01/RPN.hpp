@@ -5,10 +5,11 @@
 #include <exception>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 class RPN {
     private:
-        std::vector<int> elm;
+        std::vector< std::vector<int> > elm;
     public:
         RPN(std::string args);
         // ~RPN();
