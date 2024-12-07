@@ -1,8 +1,8 @@
-Target = btc
+Target = RPN
 
 CC = c++
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
 FILES = main.cpp RPN.cpp 
 

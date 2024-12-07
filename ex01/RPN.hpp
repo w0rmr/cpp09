@@ -3,15 +3,19 @@
 #include <string>
 #include <iostream>
 #include <exception>
-#include <vector>
+#include <stack>
 #include <algorithm>
 #include <sstream>
 
 class RPN {
     private:
-        std::vector< std::vector<int> > elm;
+        std::stack<int> Stack;
+        void yaslam(char op);
+        bool input_check(std::string &inp);
     public:
+        int pop();
         RPN(std::string args);
         // ~RPN();
 
 };
+std::ostream &operator<<(std::ostream &os ,RPN &rpn);
