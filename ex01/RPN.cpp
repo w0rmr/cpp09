@@ -6,7 +6,7 @@ bool check_token(std::string inp){
     else 
         return true;
 }
-// N "1 2 *" " 2 /" " 2 * " 2 4 " - +"
+// N 1 2 * 2 / 2 *  2 4  - +
 
 void RPN::yaslam(char op){
     if(Stack.empty())
@@ -19,11 +19,8 @@ void RPN::yaslam(char op){
         Stack.push( n2 * n1);
     else if (op == '-')
         Stack.push( n2 - n1);
-    else if(op == '+'){
-        std::cout << "n1 " << n1  << " n2 " << n2 << std::endl; 
-        std::cout << "+ yazbii " << n2 + n1 << std::endl;
+    else if(op == '+')
         Stack.push(n2 + n1);
-    }
     else if(op == '/')
     {
         if(n1 == 0){
@@ -47,34 +44,28 @@ bool RPN::input_check(std::string &inp){
             delete[] cstr;
             return false ;
         }else{
-            std::cout << token[0] << std::endl;
             char op = token[0];
             if(op == '-' || op == '+' || op == '/' || op == '*')
                 yaslam(op);
             else
                 Stack.push(std::stoi(token));
-                
         }
         token = std::strtok(NULL," ");
     }
+    
     delete [] cstr;
     return true ;
 }
 
 RPN::RPN(std::string args){
-    char value;
-    std::istringstream stream(args);
     if(!input_check(args))
         throw std::exception();
-    while((stream >> value))
-        Stack.push(value);
-    // (void) args;
 }
 int RPN::pop(void){
-    return Stack.pop(),Stack.top();
+     return Stack.top();
 }
 
 std::ostream &operator<<(std::ostream &os ,RPN &rpn){
-    os << rpn.pop() << std::endl;
+    os << rpn.pop() ;
     return os;
 }
