@@ -1,16 +1,18 @@
 #pragma once 
 #include <string>
 #include <iostream>
+#include <deque>
 #include <vector>
 #include <sstream>
 class PmergeMe {
     private:
-        std::vector<std::pair<unsigned int , unsigned int > > Stack;
-        bool is_a_less_than_b(unsigned int a , unsigned int b);
-        void fill_and_sort(unsigned int a , unsigned int b);
-        void sort();
+        std::vector<unsigned int> vec;
+        std::deque<unsigned int> deq;
     public:
         PmergeMe();
+        int time_vector(void);
+        int time_deque(void);
+        
         PmergeMe(int ac , char **av);
         ~PmergeMe();
 };
