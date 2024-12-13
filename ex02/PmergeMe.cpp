@@ -1,5 +1,6 @@
 
 #include "PmergeMe.hpp"
+#include "algorithm"
 void PmergeMe::args(std::string args[]){
 
 }
@@ -16,34 +17,34 @@ bool comp_pairs(const std::pair<unsigned int , unsigned int>  &a , const std::pa
     return (a.second < b.second );
 }
 
+// binary search !!! https://www.geeksforgeeks.org/binary-search/
+//https://www.geeksforgeeks.org/johnsons-algorithm/
+// https://dev.to/emuminov/human-explanation-and-step-by-step-visualisation-of-the-ford-johnson-algorithm-5g91
+
+//https://www.geeksforgeeks.org/binary-search/
+//https://en.wikipedia.org/wiki/Binary_search
+//https://en.wikipedia.org/wiki/Merge-insertion_sort
+
+
+
+
 std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
-    if(vec.size() % 2 != 0){
-        unsigned int gold_zeb = vec[vec.size() - 1];
-        std::cout << gold_zeb << std::endl;
-        vec.pop_back();
+    static int order = 1;
+    int unit_size = vec.size() / order;
+    if(unit_size < 2){
+        return vec;
     }
-    pair pairs ;
-    for (vector::iterator it = vec.begin();it != vec.end() ;it+=2)
-        if(*it && *(it + 1))
-            pairs.push_back(std::make_pair(*it,*(it + 1)));
-
-    std::cout << "befor sorting !" << std::endl;
-    
-    for(pair::iterator it = pairs.begin(); it != pairs.end() ; it++ )
-        std::cout << it->first << " - " << it->second << std::endl;
-
-    for(pair::iterator it = pairs.begin(); it != pairs.end() ; it++){
-        if(it->first < it->second)
-            std::swap(it->first,it->second);
+    int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
+    std::vector<unsigned int >::iterator start = vec.begin() ;
+    std::vector<unsigned int >::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
+    for (vector::iterator it = start ; it != end ; it += (order * 2))
+    {
+        if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1)))
+            std::swap(*(it + (order - 1)),*(it + ((order * 2 ) - 1)));
     }
+    order *= 2;
+    vec = sort_vector(vec);
     
-    std::sort(pairs.begin(),pairs.end(),comp_pairs);
-    
-    std::cout << "after sorting ! " << std::endl;
-    for(pair::iterator it = pairs.begin(); it != pairs.end() ; it++ )
-        std::cout << it->first << " - " << it->second << std::endl;
-    
-    return vec;
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -80,12 +81,12 @@ PmergeMe::PmergeMe(int ac , char **av){
     unsigned int  n;
     while(ss >> n){
         // std::cout << "uuu" << n << "uuuuu" << std::endl;
-       deq.push_back(n);
-       vec.push_back(n);
+       deque_.push_back(n);
+       vector_.push_back(n);
     }
-    if(vec.size() != count_word_and_check(args_string))
+    if(vector_.size() != count_word_and_check(args_string))
         throw "bad trip";
-    sort_vector(vec);
+    sort_vector(vector_);
 
 }
 

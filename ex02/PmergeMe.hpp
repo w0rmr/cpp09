@@ -10,8 +10,8 @@ class PmergeMe {
         typedef std::vector<unsigned int > vector;
         typedef std::vector<std::pair<unsigned int , unsigned int > >pair; 
     public:
-        std::vector<unsigned int> vec;
-        std::deque<unsigned int> deq;
+        std::vector<unsigned int> vector_;
+        std::deque<unsigned int> deque_;
         PmergeMe();
         void args(std::string args[]);
         int time_vector(void);
