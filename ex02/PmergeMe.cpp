@@ -31,8 +31,12 @@ bool comp_pairs(const std::pair<unsigned int , unsigned int>  &a , const std::pa
 std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     static int order = 1;
     int unit_size = vec.size() / order;
-    if(unit_size < 2)
-        return vec;
+    if(unit_size < 2){
+        std::cout << "the stack at the end : " << std::endl;
+        for (vector::iterator it = vec.begin(); it != vec.end(); it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        return vec;}
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
     std::vector<unsigned int >::iterator start = vec.begin() ;
     std::vector<unsigned int >::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
@@ -52,7 +56,8 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
     }
     std::cout << "at pair " << order << "the main now "<< std::endl;
     for(vector::iterator ittt = main.begin();ittt != main.end(); ittt++)
-        std::cout << *ittt << std::endl;
+        std::cout << " " << *ittt ;
+    std::cout << std::endl;
     return vec;
 }
 
