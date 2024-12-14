@@ -31,22 +31,15 @@ bool comp_pairs(const std::pair<unsigned int , unsigned int>  &a , const std::pa
 std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     static int order = 1;
     int unit_size = vec.size() / order;
-    if(unit_size < 2){
-        // for(vector::iterator it = vec.begin() ; it != vec.end() ; it++)
-        //     std::cout << *it << std::endl;
+    if(unit_size < 2)
         return vec;
-    }
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
     std::vector<unsigned int >::iterator start = vec.begin() ;
     std::vector<unsigned int >::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
     for (vector::iterator it = start ; it != end ; it += (order * 2))
-    {
-        if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1))){
+        if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1)))
             for(int i = 0 ; i < order ; i++)
                 std::swap(*(it + i),*(it + i + order ));
-            }
-
-    }
     order *= 2;
     vec = sort_vector(vec);
     order /= 2;
