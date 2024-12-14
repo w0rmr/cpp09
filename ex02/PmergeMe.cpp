@@ -26,12 +26,14 @@ bool comp_pairs(const std::pair<unsigned int , unsigned int>  &a , const std::pa
 //https://en.wikipedia.org/wiki/Merge-insertion_sort
 
 
-
+// https://miro.com/app/board/uXjVNXhGDgk=/
 
 std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     static int order = 1;
     int unit_size = vec.size() / order;
     if(unit_size < 2){
+        // for(vector::iterator it = vec.begin() ; it != vec.end() ; it++)
+        //     std::cout << *it << std::endl;
         return vec;
     }
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
@@ -39,12 +41,26 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
     std::vector<unsigned int >::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
     for (vector::iterator it = start ; it != end ; it += (order * 2))
     {
-        if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1)))
-            std::swap(*(it + (order - 1)),*(it + ((order * 2 ) - 1)));
+        if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1))){
+            for(int i = 0 ; i < order ; i++)
+                std::swap(*(it + i),*(it + i + order ));
+            }
+
     }
     order *= 2;
     vec = sort_vector(vec);
-    
+    order /= 2;
+    vector main;
+    vector pend;
+    for(vector::iterator it = start;it != end; it += order){
+        main.push_back(*(it + order - 1));
+        for(vector::iterator itt = it ; itt != it + order - 1 && itt != end ;itt++)
+            pend.push_back(*it);
+    }
+    std::cout << "at pair " << order << "the main now "<< std::endl;
+    for(vector::iterator ittt = main.begin();ittt != main.end(); ittt++)
+        std::cout << *ittt << std::endl;
+    return vec;
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
