@@ -1,6 +1,6 @@
 
 #include "PmergeMe.hpp"
-#include "algorithm"
+#include <algorithm>
 void PmergeMe::args(std::string args[]){
 
 }
@@ -27,6 +27,15 @@ bool comp_pairs(const std::pair<unsigned int , unsigned int>  &a , const std::pa
 
 
 // https://miro.com/app/board/uXjVNXhGDgk=/
+#include <cmath>
+int Jacobsthal(int k){
+     return round((pow(2, k + 1) + pow(-1, k)) / 3);
+
+}
+
+bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::iterator &b){
+    return (*a > *b);
+}
 
 std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     static int order = 1;
@@ -38,8 +47,8 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
         std::cout << std::endl;
         return vec;}
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
-    std::vector<unsigned int >::iterator start = vec.begin() ;
-    std::vector<unsigned int >::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
+    vector::iterator start = vec.begin() ;
+    vector::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
     for (vector::iterator it = start ; it != end ; it += (order * 2))
         if(*(it + (order - 1)) > *(it + ((order * 2 ) - 1)))
             for(int i = 0 ; i < order ; i++)
@@ -49,15 +58,41 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
     order /= 2;
     vector main;
     vector pend;
-    for(vector::iterator it = start;it != end; it += order){
+    main.push_back(*(start + order - 1));
+    main.push_back(*(start + order * 2 - 1));
+    for(vector::iterator it = start + order * 2 ;it != end; it += order){
+        pend.push_back(*(it + order - 1));
+        it +=order;
         main.push_back(*(it + order - 1));
-        for(vector::iterator itt = it ; itt != it + order - 1 && itt != end ;itt++)
-            pend.push_back(*it);
     }
-    std::cout << "at pair " << order << "the main now "<< std::endl;
-    for(vector::iterator ittt = main.begin();ittt != main.end(); ittt++)
-        std::cout << " " << *ittt ;
-    std::cout << std::endl;
+    int k = 1;
+    int jacobsthal_nbr  = Jacobsthal(k);
+    int inserted_nbr = 0;
+    while (1){
+        k++;
+        int cur_jacobsthal = Jacobsthal(k);
+        int dif = cur_jacobsthal - jacobsthal_nbr;
+        std::cout << cur_jacobsthal << std::endl;
+        int offset = 0;
+        if(dif > main.size())
+            break;
+        vector::iterator p_it = pend.begin() + dif - 1;
+        vector::iterator bound_it = main.begin() + cur_jacobsthal + inserted_nbr;
+        std::cout << "the dif " << dif  << "k = " << k << std::endl;
+        int i = 0;
+        while(i){
+                vector::iterator idx = std::upper_bound(main.begin(),bound_it,*p_it);
+                vector::iterator inserted = main.insert(idx,*p_it);
+                i--;
+                p_it = pend.erase(p_it);
+                p_it--;
+                offset += ((inserted - main.begin()) == cur_jacobsthal + inserted_nbr);
+                bound_it = main.begin() + (cur_jacobsthal + inserted_nbr - offset  );
+        }
+        jacobsthal_nbr = cur_jacobsthal;
+        inserted_nbr += dif;
+    }
+    
     return vec;
 }
 
