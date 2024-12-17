@@ -53,38 +53,59 @@ std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,st
     //     std::cout << *it << std::endl;
     
     // make a copy of the main 
+    std::cout << "here " << std::endl;
     vector::iterator copy_it ;
     vector main_copy;
     main_copy.insert(main_copy.end(),main.begin(),main.end());
+    std::cout << "here 1" << std::endl;
 
     if(pend.size() == 1){
         copy_it = std::upper_bound(main_copy.begin(),main_copy.end() - 1,*pend.begin());
         main.insert(main.begin() + (copy_it - main_copy.begin()),*pend.begin());
         main_copy.insert(copy_it,*pend.begin());
+    std::cout << "here 2" << std::endl;
 
     }else if(pend.size() > 1){
-        int jc = 3;
-        int count = 0;
-        int idx ;
-        int decrease ;
+        size_t jc = 3;
+        size_t count = 0;
+        size_t idx ;
+        size_t decrease ;
+    std::cout << "here 3" << std::endl;
         while(!pend.empty()){
+            std::cout << "zeb 1" << std::endl;
+
             idx = Jacobsthal(jc) - Jacobsthal(jc - 1);
             if(idx > pend.size())
                 idx = pend.size();
             decrease = 0;
+            std::cout << "zeb 2" << std::endl;
             while(idx){
-                Jacobsthal(jc + count ) - decrease >= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
+            std::cout << "zeb 3" << std::endl;
+                
+                Jacobsthal(jc + count ) - decrease <= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
+                
                 copy_it = std::upper_bound(main_copy.begin(),copy_it,*(pend.begin() + idx - 1));
+                
                 main.insert(main.begin() + (copy_it - main_copy.begin() ),*(pend.begin() + idx - 1));
+                
+                std::cout << "zeb 4" << std::endl;
+                
                 main_copy.insert(copy_it,*(pend.begin() + idx - 1));
+                
+                std::cout << "zeb 5" << std::endl;
+                
                 pend.erase(pend.begin() + idx - 1 ,pend.begin() + idx);
+                
                 idx--;
                 decrease++;
                 count++;
             }
+
             jc++;
         }
     }
+    for(vector::iterator it = main.begin();it != main.end();it++)
+        std::cout << *it << std::endl;
     
     return main;
 }
