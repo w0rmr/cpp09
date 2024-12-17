@@ -37,7 +37,7 @@ bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::it
     return (*a > *b);
 }
 
-std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , std::vector<unsigned int > &odds,int order){
+void PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , std::vector<unsigned int > &odds,int order){
     (void) order;
 
     // std::cout << "++++++++++++ insert +++++++++" << std::endl;
@@ -70,7 +70,7 @@ std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,st
         size_t count = 0;
         size_t idx ;
         size_t decrease ;
-    std::cout << "here 3" << std::endl;
+        std::cout << "here 3" << std::endl;
         while(!pend.empty()){
             std::cout << "zeb 1" << std::endl;
 
@@ -81,7 +81,7 @@ std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,st
             std::cout << "zeb 2" << std::endl;
             while(idx){
             std::cout << "zeb 3" << std::endl;
-                
+                std::cout << idx << std::endl;        
                 Jacobsthal(jc + count ) - decrease <= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
                 
                 copy_it = std::upper_bound(main_copy.begin(),copy_it,*(pend.begin() + idx - 1));
@@ -104,13 +104,16 @@ std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,st
             jc++;
         }
     }
+    // if(!odds.empty())
+    // {
+    //     copy_it = std::upper_bound(main_copy.begin(),main_copy.end(),*odds.begin());
+    //     main.insert(main.begin() + (copy_it - main_copy.begin()),*odds.begin());
+    // }
     for(vector::iterator it = main.begin();it != main.end();it++)
         std::cout << *it << std::endl;
-    
-    return main;
 }
 
-std::vector<unsigned int > &PmergeMe::sort_vector(std::vector<unsigned int > &vec){
+void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     std::cout << "sort " << std::endl;
     static int order = 1;
     int unit_size = vec.size() / order;
@@ -119,7 +122,7 @@ std::vector<unsigned int > &PmergeMe::sort_vector(std::vector<unsigned int > &ve
         for (vector::iterator it = vec.begin();it != vec.end();it++)
             std::cout << *it << " " ;
         std::cout << std::endl;
-        return vec;}
+        return ;}
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
     vector::iterator start = vec.begin() ;
     vector::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
@@ -128,7 +131,7 @@ std::vector<unsigned int > &PmergeMe::sort_vector(std::vector<unsigned int > &ve
             for(int i = 0 ; i < order ; i++)
                 std::swap(*(it + i),*(it + i + order ));
     order *= 2;
-    vec = sort_vector(vec);
+    sort_vector(vec);
     order /= 2;
     vector main;
     vector pend;
@@ -137,14 +140,13 @@ std::vector<unsigned int > &PmergeMe::sort_vector(std::vector<unsigned int > &ve
     main.push_back(*(start + order * 2 - 1));
     for(vector::iterator it = start + order * 2 ;it != end; it += order){
         pend.push_back(*(it + order - 1));
-        it +=order;
+        it += order;
         main.push_back(*(it + order - 1));
     }
     for (vector::iterator it = end ; it != vec.end();it++)
         odd_elm.push_back(*it);
     std::cout << "here we go again :) " << std::endl;
     insert(main,pend,odd_elm,order);
-    return (vec);
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -186,7 +188,7 @@ PmergeMe::PmergeMe(int ac , char **av){
     }
     if(vector_.size() != count_word_and_check(args_string))
         throw "bad trip";
-    std::vector<unsigned int > vec =  sort_vector(vector_);
+    sort_vector(vector_);
     // for(std::vector<unsigned int >::iterator it = vec.begin();it != vec.end();it++)
     //     std::cout << *it << std::endl;
 
