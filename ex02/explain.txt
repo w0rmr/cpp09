@@ -38,7 +38,7 @@ Sure, let's break down the Ford-Johnson algorithm in more detail:
    - Check if the vector has 0 or 1 elements. If true, return the vector as it is already sorted.
 
 3. **Initial Sorting for Small Vectors**:
-   - If the vector has 2 elements, compare and swap if necessary.
+   - If the vec   tor has 2 elements, compare and swap if necessary.
    - If the vector has 3 elements, sort them using insertion sort.
 
 4. **Divide the Vector**:

@@ -37,13 +37,66 @@ bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::it
     return (*a > *b);
 }
 
-std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec){
+std::vector<unsigned int >& PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , std::vector<unsigned int > &odds,int order){
+    (void) order;
+
+    // std::cout << "++++++++++++ insert +++++++++" << std::endl;
+    // std::cout << "the order here is " << order << std::endl;
+    // std::cout << " the main in the insert" << std::endl;
+    // for(vector::iterator it = main.begin();it != main.end();it++)
+    //     std::cout << *it << std::endl;
+    // std::cout << " the pend in the insert" << std::endl;
+    // for(vector::iterator it = pend.begin();it != pend.end();it++)
+    //     std::cout << *it << std::endl;
+    // std::cout << " the odds in the insert" << std::endl;
+    // for(vector::iterator it = odds.begin();it != odds.end();it++)
+    //     std::cout << *it << std::endl;
+    
+    // make a copy of the main 
+    vector::iterator copy_it ;
+    vector main_copy;
+    main_copy.insert(main_copy.end(),main.begin(),main.end());
+
+    if(pend.size() == 1){
+        copy_it = std::upper_bound(main_copy.begin(),main_copy.end() - 1,*pend.begin());
+        main.insert(main.begin() + (copy_it - main_copy.begin()),*pend.begin());
+        main_copy.insert(copy_it,*pend.begin());
+
+    }else if(pend.size() > 1){
+        int jc = 3;
+        int count = 0;
+        int idx ;
+        int decrease ;
+        while(!pend.empty()){
+            idx = Jacobsthal(jc) - Jacobsthal(jc - 1);
+            if(idx > pend.size())
+                idx = pend.size();
+            decrease = 0;
+            while(idx){
+                Jacobsthal(jc + count ) - decrease >= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
+                copy_it = std::upper_bound(main_copy.begin(),copy_it,*(pend.begin() + idx - 1));
+                main.insert(main.begin() + (copy_it - main_copy.begin() ),*(pend.begin() + idx - 1));
+                main_copy.insert(copy_it,*(pend.begin() + idx - 1));
+                pend.erase(pend.begin() + idx - 1 ,pend.begin() + idx);
+                idx--;
+                decrease++;
+                count++;
+            }
+            jc++;
+        }
+    }
+    
+    return main;
+}
+
+std::vector<unsigned int > &PmergeMe::sort_vector(std::vector<unsigned int > &vec){
+    std::cout << "sort " << std::endl;
     static int order = 1;
     int unit_size = vec.size() / order;
     if(unit_size < 2){
-        std::cout << "the stack at the end : " << std::endl;
-        for (vector::iterator it = vec.begin(); it != vec.end(); it++)
-            std::cout << *it << " ";
+        std::cout << "break here " << std::endl;
+        for (vector::iterator it = vec.begin();it != vec.end();it++)
+            std::cout << *it << " " ;
         std::cout << std::endl;
         return vec;}
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
@@ -58,6 +111,7 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
     order /= 2;
     vector main;
     vector pend;
+    vector odd_elm;
     main.push_back(*(start + order - 1));
     main.push_back(*(start + order * 2 - 1));
     for(vector::iterator it = start + order * 2 ;it != end; it += order){
@@ -65,35 +119,11 @@ std::vector<unsigned int > PmergeMe::sort_vector(std::vector<unsigned int > &vec
         it +=order;
         main.push_back(*(it + order - 1));
     }
-    int k = 1;
-    int jacobsthal_nbr  = Jacobsthal(k);
-    int inserted_nbr = 0;
-    while (1){
-        k++;
-        int cur_jacobsthal = Jacobsthal(k);
-        int dif = cur_jacobsthal - jacobsthal_nbr;
-        std::cout << cur_jacobsthal << std::endl;
-        int offset = 0;
-        if(dif > main.size())
-            break;
-        vector::iterator p_it = pend.begin() + dif - 1;
-        vector::iterator bound_it = main.begin() + cur_jacobsthal + inserted_nbr;
-        std::cout << "the dif " << dif  << "k = " << k << std::endl;
-        int i = 0;
-        while(i){
-                vector::iterator idx = std::upper_bound(main.begin(),bound_it,*p_it);
-                vector::iterator inserted = main.insert(idx,*p_it);
-                i--;
-                p_it = pend.erase(p_it);
-                p_it--;
-                offset += ((inserted - main.begin()) == cur_jacobsthal + inserted_nbr);
-                bound_it = main.begin() + (cur_jacobsthal + inserted_nbr - offset  );
-        }
-        jacobsthal_nbr = cur_jacobsthal;
-        inserted_nbr += dif;
-    }
-    
-    return vec;
+    for (vector::iterator it = end ; it != vec.end();it++)
+        odd_elm.push_back(*it);
+    std::cout << "here we go again :) " << std::endl;
+    insert(main,pend,odd_elm,order);
+    return (vec);
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -135,7 +165,10 @@ PmergeMe::PmergeMe(int ac , char **av){
     }
     if(vector_.size() != count_word_and_check(args_string))
         throw "bad trip";
-    sort_vector(vector_);
+    std::vector<unsigned int > vec =  sort_vector(vector_);
+    // for(std::vector<unsigned int >::iterator it = vec.begin();it != vec.end();it++)
+    //     std::cout << *it << std::endl;
+
 
 }
 
