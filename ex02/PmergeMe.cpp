@@ -52,49 +52,43 @@ std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,s
     //     std::cout << *it << std::endl;
     
     // make a copy of the main 
-    std::cout << "here " << std::endl;
+    // std::cout << "here " << std::endl;
     vector::iterator copy_it ;
     vector main_copy;
     main_copy.insert(main_copy.end(),main.begin(),main.end());
-    std::cout << "here 1" << std::endl;
+    // std::cout << "here 1" << std::endl;
 
     if(pend.size() == 1){
         copy_it = std::upper_bound(main_copy.begin(),main_copy.end() - 1,*pend.begin());
         main.insert(main.begin() + (copy_it - main_copy.begin()),*pend.begin());
         main_copy.insert(copy_it,*pend.begin());
-    std::cout << "here 2" << std::endl;
+    // std::cout << "here 2" << std::endl;
 
     }else if(pend.size() > 1){
         size_t jc = 3;
         size_t count = 0;
         size_t idx ;
         size_t decrease ;
-        std::cout << "here 3" << std::endl;
+        // std::cout << "here 3" << std::endl;
         while(!pend.empty()){
-            std::cout << "zeb 1" << std::endl;
+            // std::cout << "zeb 1" << std::endl;
 
             idx = Jacobsthal(jc) - Jacobsthal(jc - 1);
             if(idx > pend.size())
                 idx = pend.size();
             decrease = 0;
-            std::cout << "zeb 2" << std::endl;
+            // std::cout << "zeb 2" << std::endl;
             while(idx){
-            std::cout << "zeb 3" << std::endl;
-                std::cout << idx << std::endl;        
+            // std::cout << "zeb 3" << std::endl;
+                // std::cout << idx << std::endl;        
                 Jacobsthal(jc + count ) - decrease <= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
                 
                 copy_it = std::upper_bound(main_copy.begin(),copy_it,*(pend.begin() + idx - 1));
                 
                 main.insert(main.begin() + (copy_it - main_copy.begin() ),*(pend.begin() + idx - 1));
                 
-                std::cout << "zeb 4" << std::endl;
-                
                 main_copy.insert(copy_it,*(pend.begin() + idx - 1));
-                
-                std::cout << "zeb 5" << std::endl;
-                
                 pend.erase(pend.begin() + idx - 1 ,pend.begin() + idx);
-                
                 idx--;
                 decrease++;
                 count++;
@@ -110,8 +104,12 @@ std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,s
     }
     for(vector::iterator i = vec.begin(); i != vec.end(); i++)
         main.push_back(*i);
+    std::cout << "start printing end " << std::endl;
     for(vector::iterator it = main.begin();it != main.end();it++)
-        std::cout << *it << std::endl;
+        std::cout << *it << " ";
+    
+    std::cout<< std::endl << "the size of the main is " << std::endl;
+   std::cout << main.size()<<  std::endl;
     return main;
 }
 
@@ -120,11 +118,15 @@ void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     static int order = 1;
     int unit_size = vec.size() / order;
     if(unit_size < 2){
+        
         std::cout << "break here " << std::endl;
         for (vector::iterator it = vec.begin();it != vec.end();it++)
             std::cout << *it << " " ;
         std::cout << std::endl;
-        return ;}
+        return ;
+        
+        }
+
     int  is_odd =  unit_size % 2 == 1 ? 1 : 0; 
     vector::iterator start = vec.begin() ;
     vector::iterator end = vec.begin() + ((order * unit_size) - (is_odd * order));
@@ -138,40 +140,23 @@ void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     // order += 2;
     vector main;
     vector pend;
-    vector odd_elm;
+    unsigned int odd;
     vector left;
     main.push_back(*(start + order - 1));
     main.push_back(*(start + order * 2 - 1));
     for(vector::iterator it = start + order * 2 ;it != end; it += order){
-        for(vector::iterator i = it ;i != it + order - 1 ;i++ )
-            left.push_back(*i);
         pend.push_back(*(it + order - 1));
         it += order;
-        for(vector::iterator i = it ;i != it + order - 1 ;i++ )
-            left.push_back(*i);
         main.push_back(*(it + order - 1));
     }
+    std::cout <<  "the stack here is " << ( vec.end() - end) << " and the pair leve is " << order  << std::endl;
+    if(vec.end() - end >= order )
+        odd = *(end + order - 1 );
+    
     for (vector::iterator it = end ; it != vec.end();it++)
-        odd_elm.push_back(*it);
-    std::cout << "the main "<< std::endl;
-    for(vector::iterator it = main.begin();it != main.end();it++)
-        std::cout << *it << " ";
-    std::cout << std::endl;
-    std::cout << "the pend "<< std::endl;
-    for(vector::iterator it = pend.begin();it != pend.end();it++)
-        std::cout << *it << " ";
-    std::cout << std::endl;
-    std::cout << "the odds "<< std::endl;
-    for(vector::iterator it = odd_elm.begin();it != odd_elm.end();it++)
-        std::cout << *it << " ";
-    std::cout << std::endl;
-    std::cout << "the lefts "<< std::endl;
-    for(vector::iterator it = left.begin();it != left.end();it++)
-        std::cout << *it << " ";
-    std::cout << std::endl;
-    // std::cout << "here we go again :) " << std::endl;
+        left.push_back(*it);
     if(!odd_elm.empty() || !pend.empty())
-       vec =  insert(main,pend,odd_elm,left);
+       insert(main,pend,odd_elm,left);
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -197,7 +182,7 @@ int count_word_and_check(std::string &str){
 
 
 PmergeMe::PmergeMe(int ac , char **av){
-    std::string args_string ; 
+    std::string args_string ;
     for (int i = 1 ;i < ac ;i++){
         args_string += av[i] ;
         if(av[i] != NULL)
