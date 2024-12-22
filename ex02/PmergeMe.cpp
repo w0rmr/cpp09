@@ -37,16 +37,12 @@ bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::it
     return (*a > *b);
 }
 
-void  PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &tmp,int is_odd,int order){
+void  PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &vec,int is_odd,int order){
 
-    vector::iterator copy_it ;
-    vector main_copy;
-    main_copy.insert(main_copy.end(),main.begin(),main.end());
-
+    vector::iterator end ;
     if(pend.size() == 1){
-        copy_it = std::upper_bound(main_copy.begin(),main_copy.end() - 1,*pend.begin());
-        main.insert(main.begin() + (copy_it - main_copy.begin()),*pend.begin());
-        main_copy.insert(copy_it,*pend.begin());
+        end = std::upper_bound(main.begin(),main.end() - 1,*pend.begin());
+        main.insert(main.begin() + (end - main.begin()),*pend.begin());
 
     }else if(pend.size() > 1){
         size_t jc = 3;
@@ -61,33 +57,31 @@ void  PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int
             decrease = 0;
 
             while(idx){
-                Jacobsthal(jc + count ) - decrease <= main_copy.size() ? copy_it = main_copy.begin() + Jacobsthal(jc + count ) - decrease : copy_it = main_copy.end(); 
-                copy_it = std::upper_bound(main_copy.begin(),copy_it,*(pend.begin() + idx - 1));
-                main.insert(main.begin() + (copy_it - main_copy.begin() ),*(pend.begin() + idx - 1));
-                main_copy.insert(copy_it,*(pend.begin() + idx - 1));
+                Jacobsthal(jc + count ) - decrease <= main.size() ? end = main.begin() + Jacobsthal(jc + count ) - decrease : end = main.end(); 
+                end = std::upper_bound(main.begin(),end,*(pend.begin() + idx - 1));
+                main.insert(main.begin() + (end - main.begin() ),*(pend.begin() + idx - 1));
                 pend.erase(pend.begin() + idx - 1 ,pend.begin() + idx);
                 idx--;
                 decrease++;
                 count++;
             }
-
             jc++;
         }
     }
     vector yaslam;
     if(is_odd)
     {
-        copy_it = std::upper_bound(main_copy.begin(),main_copy.end(),odd);
-        main.insert(main.begin() + (copy_it - main_copy.begin()),odd);
+        end = std::upper_bound(main.begin(),main.end(),odd);
+        main.insert(main.begin() + (end - main.begin()),odd);
         
     }
     for(vector::iterator i = main.begin(); i != main.end(); i ++){  
-        vector::iterator it = std::find(tmp.begin(),tmp.end(),*i);
+        vector::iterator it = std::find(vec.begin(),vec.end(),*i);
         yaslam.insert(yaslam.end(),it - (order - 1) ,it + 1);
     }
     for(vector::iterator i = left.begin(); i != left.end(); i++)
         yaslam.push_back(*i);
-    tmp = yaslam;
+    vec = yaslam;
 }
 
 void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
