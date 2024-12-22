@@ -2,7 +2,7 @@ Target = PmergeMe
 
 CC = c++
 
-FLAGS =# -fsanitize=address -g #-Wall -Wextra -Werror -std=c++98 -fsanitize=address
+FLAGS = -fsanitize=address -g #-Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 FILES = main.cpp PmergeMe.cpp 
 

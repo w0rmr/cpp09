@@ -37,7 +37,7 @@ bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::it
     return (*a > *b);
 }
 
-std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &tmp,int is_odd){
+std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &tmp,int is_odd,int order){
 
     vector::iterator copy_it ;
     vector main_copy;
@@ -74,16 +74,27 @@ std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,s
             jc++;
         }
     }
-    for(vector::iterator i = tmp.begin();i != tmp.end(); i++)
-        main.push_back(*i);
+    vector yaslam;
     if(is_odd)
     {
         copy_it = std::upper_bound(main_copy.begin(),main_copy.end(),odd);
         main.insert(main.begin() + (copy_it - main_copy.begin()),odd);
+        
+    }
+    for(vector::iterator i = main.begin(); i != main.end(); i ++){  
+        vector::iterator it = std::find(tmp.begin(),tmp.end(),*i);
+        std::cout << "inside the for loop " << std::endl;
+        std::cout << "we found " << *it << std::endl;
+        for(vector::iterator y = it - (order - 1) ; y != it + 1 ;y++)
+            std::cout << *y << " " ;
+        std::cout << std::endl;
+        yaslam.insert(yaslam.end(),it - (order - 1) ,it + 1);
     }
     for(vector::iterator i = left.begin(); i != left.end(); i++)
-        main.push_back(*i);
-    return main;
+        yaslam.push_back(*i);
+    tmp = yaslam;
+
+    return tmp;
 }
 
 void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
@@ -131,8 +142,38 @@ void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
 
     for (vector::iterator it = end + (order * is_odd) ; it != vec.end();it++)
         left.push_back(*it);
-    if( is_odd || !pend.empty())
-        vec = insert(main,pend,odd,left,tmp,is_odd);
+    if( is_odd || !pend.empty()){
+        std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
+        std::cout << "the vector befor sorting : " ;
+        for(vector::iterator it = vec.begin();it!= vec.end();it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        std::cout << "the main :" ;
+        for(vector::iterator it = main.begin();it!= main.end();it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        std::cout << "the pend :" ;
+        for(vector::iterator it = pend.begin();it!= pend.end();it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        std::cout << "the left :" ;
+        for(vector::iterator it = left.begin();it!= left.end();it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        if(is_odd){
+            std::cout << "is odd the odd is " << odd <<std::endl;
+        }
+        std::cout << "the tmp :" ;
+        for(vector::iterator it = tmp.begin();it!= tmp.end();it++)
+            std::cout << *it << " ";
+        std::cout << std::endl;
+        vec = insert(main,pend,odd,left,vec,is_odd,order);
+        std::cout << "the vector after sorting : " ;
+        for(vector::iterator it = vec.begin();it!= vec.end();it++)
+            std::cout << *it << " ";
+        
+        std::cout << std::endl;
+        }
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -175,13 +216,6 @@ PmergeMe::PmergeMe(int ac , char **av){
     if(vector_.size() != count_word_and_check(args_string))
         throw "bad trip";
     sort_vector(vector_);
-    std::cout << "here is " << std::endl;
-    for(vector::iterator it = vector_.begin();it != vector_.end();it++)
-        std::cout << *it << std::endl;
-    // for(std::vector<unsigned int >::iterator it = vec.begin();it != vec.end();it++)
-    //     std::cout << *it << std::endl;
-
-
 }
 
 PmergeMe::PmergeMe(){
