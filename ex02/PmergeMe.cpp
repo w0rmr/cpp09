@@ -37,7 +37,7 @@ bool comp(std::vector<unsigned int >::iterator &a,std::vector<unsigned int >::it
     return (*a > *b);
 }
 
-std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &tmp,int is_odd,int order){
+void  PmergeMe::insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector<unsigned int> &tmp,int is_odd,int order){
 
     vector::iterator copy_it ;
     vector main_copy;
@@ -83,18 +83,11 @@ std::vector<unsigned int > & PmergeMe::insert(std::vector<unsigned int > &main,s
     }
     for(vector::iterator i = main.begin(); i != main.end(); i ++){  
         vector::iterator it = std::find(tmp.begin(),tmp.end(),*i);
-        std::cout << "inside the for loop " << std::endl;
-        std::cout << "we found " << *it << std::endl;
-        for(vector::iterator y = it - (order - 1) ; y != it + 1 ;y++)
-            std::cout << *y << " " ;
-        std::cout << std::endl;
         yaslam.insert(yaslam.end(),it - (order - 1) ,it + 1);
     }
     for(vector::iterator i = left.begin(); i != left.end(); i++)
         yaslam.push_back(*i);
     tmp = yaslam;
-
-    return tmp;
 }
 
 void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
@@ -117,63 +110,19 @@ void PmergeMe::sort_vector(std::vector<unsigned int > &vec){
     vector pend;
     unsigned int odd;
     vector left;
-    vector tmp;
-    for(vector::iterator it = start ;it != start + order - 1;it++)
-        tmp.push_back(*it);
     main.push_back(*(start + order - 1));
-    for(vector::iterator it = start + order ; it != start + order * 2 - 1  ; it++)
-        tmp.push_back(*it);
     main.push_back(*(start + order * 2 - 1));
     for(vector::iterator it = start + order * 2 ;it != end; it += order){
-        for(vector::iterator i = it ;i != it + order - 1 ;i++)
-            tmp.push_back(*i);
         pend.push_back(*(it + order - 1));
         it += order;
-        for(vector::iterator i = it ;i != it + order - 1 ;i++)
-            tmp.push_back(*i);
         main.push_back(*(it + order - 1));
     }
-
-    if(is_odd){
-        for(vector::iterator i = end ; i != end + order - 1 ; i++)
-            tmp.push_back(*i);
+    if(is_odd)
         odd = *(end + order - 1 );
-        }
-
     for (vector::iterator it = end + (order * is_odd) ; it != vec.end();it++)
         left.push_back(*it);
-    if( is_odd || !pend.empty()){
-        std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
-        std::cout << "the vector befor sorting : " ;
-        for(vector::iterator it = vec.begin();it!= vec.end();it++)
-            std::cout << *it << " ";
-        std::cout << std::endl;
-        std::cout << "the main :" ;
-        for(vector::iterator it = main.begin();it!= main.end();it++)
-            std::cout << *it << " ";
-        std::cout << std::endl;
-        std::cout << "the pend :" ;
-        for(vector::iterator it = pend.begin();it!= pend.end();it++)
-            std::cout << *it << " ";
-        std::cout << std::endl;
-        std::cout << "the left :" ;
-        for(vector::iterator it = left.begin();it!= left.end();it++)
-            std::cout << *it << " ";
-        std::cout << std::endl;
-        if(is_odd){
-            std::cout << "is odd the odd is " << odd <<std::endl;
-        }
-        std::cout << "the tmp :" ;
-        for(vector::iterator it = tmp.begin();it!= tmp.end();it++)
-            std::cout << *it << " ";
-        std::cout << std::endl;
-        vec = insert(main,pend,odd,left,vec,is_odd,order);
-        std::cout << "the vector after sorting : " ;
-        for(vector::iterator it = vec.begin();it!= vec.end();it++)
-            std::cout << *it << " ";
-        
-        std::cout << std::endl;
-        }
+    if( is_odd || !pend.empty())
+        insert(main,pend,odd,left,vec,is_odd,order);
 }
 
 std::deque<unsigned int > PmergeMe::sort_deque(std::deque<unsigned int > &vec){
@@ -209,13 +158,15 @@ PmergeMe::PmergeMe(int ac , char **av){
     std::istringstream ss(args_string);
     unsigned int  n;
     while(ss >> n){
-        // std::cout << "uuu" << n << "uuuuu" << std::endl;
        deque_.push_back(n);
        vector_.push_back(n);
     }
     if(vector_.size() != count_word_and_check(args_string))
         throw "bad trip";
     sort_vector(vector_);
+    std::cout << "the sorted vector " <<std::endl;
+    for(vector::iterator it = vector_.begin();it != vector_.end();it++)
+        std::cout << *it << std::endl;
 }
 
 PmergeMe::PmergeMe(){
