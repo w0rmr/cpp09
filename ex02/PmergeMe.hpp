@@ -18,7 +18,7 @@ class PmergeMe {
         int time_deque(void);
         void sort_vector(std::vector<unsigned int > &vec);
         std::deque<unsigned int > sort_deque(std::deque<unsigned int > &vec);
-        std::vector<unsigned int > & insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , std::vector<unsigned int > &odds,std::vector<unsigned int > &vec);
+        std::vector<unsigned int > &insert(std::vector<unsigned int > &main,std::vector<unsigned int > &pend , unsigned int odd,std::vector<unsigned int > &left,std::vector< unsigned int > &tmp ,int is_odd);
         PmergeMe(int ac , char **av);
         ~PmergeMe();
 };
