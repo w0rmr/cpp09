@@ -13,6 +13,8 @@ void RPN::yaslam(char op){
         throw std::exception();
     int n1 = Stack.top();
     Stack.pop();
+    if(Stack.empty())
+        throw std::exception();
     int n2 = Stack.top();
     Stack.pop();
     if(op == '*')
@@ -40,13 +42,14 @@ bool RPN::input_check(std::string &inp){
     // int order = - 1;
     while(token){
         std::string tmp = token;
-        if(std::strlen(token) != 1 || !check_token(token)){
+        if( !check_token(token)){
             delete[] cstr;
             return false ;
         }else{
             char op = token[0];
-            if(op == '-' || op == '+' || op == '/' || op == '*')
+            if(op == '-' || op == '+' || op == '/' || op == '*'){
                 yaslam(op);
+            }
             else
                 Stack.push(std::stoi(token));
         }
@@ -65,7 +68,18 @@ int RPN::pop(void){
      return Stack.top();
 }
 
+
+bool RPN::empty(void){
+    return (Stack.empty());
+}
+
+size_t RPN::size(void){
+    return (Stack.size());
+}
+
 std::ostream &operator<<(std::ostream &os ,RPN &rpn){
+    if(rpn.size() != 1)
+        throw std::exception();
     os << rpn.pop() ;
     return os;
 }

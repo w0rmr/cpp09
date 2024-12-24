@@ -13,6 +13,8 @@ class RPN {
         void yaslam(char op);
         bool input_check(std::string &inp);
     public:
+        bool empty(void);
+        size_t size(void);
         int pop();
         RPN();
         RPN &operator=(RPN &rpn);
