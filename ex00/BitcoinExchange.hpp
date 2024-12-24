@@ -6,7 +6,7 @@
 #include <sstream>
 // #include <string>
 
-class btc {
+class BitcoinExchange {
     private:
         std::string data_path;
         std::string input_path;
@@ -25,11 +25,13 @@ class btc {
         std::string err_str;
         bool isdigit_(std::string nbr,char ignor);
     public:
-        btc();
+        BitcoinExchange();
+        BitcoinExchange(BitcoinExchange &btc);
+        BitcoinExchange &operator=(const BitcoinExchange &btc);
         void data_(std::string path);
         void input_(std::string input);
-        btc(std::string file_path,std::string csv_path);
-        ~btc();
+        BitcoinExchange(std::string file_path,std::string csv_path);
+        ~BitcoinExchange();
 };
 
-std::ostream &operator<<(std::ostream &o , btc &BTC);
+std::ostream &operator<<(std::ostream &o , BitcoinExchange &BTC);

@@ -69,3 +69,17 @@ std::ostream &operator<<(std::ostream &os ,RPN &rpn){
     os << rpn.pop() ;
     return os;
 }
+
+RPN::RPN(RPN &rpn) {
+        this->Stack = rpn.Stack;
+}
+
+
+RPN &RPN::operator=(RPN &rpn) {
+        if (this == &rpn) {
+            return *this; 
+        }
+        this->Stack = rpn.Stack;
+
+        return *this;
+    }

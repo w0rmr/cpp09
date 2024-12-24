@@ -2,9 +2,9 @@ Target = PmergeMe
 
 CC = c++
 
-FLAGS =# -fsanitize=address -g #-Wall -Wextra -Werror -std=c++98 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
-FILES = main.cpp PmergeMe.cpp 
+FILES = main.cpp
 
 objects = $(FILES:.cpp=.o)
 

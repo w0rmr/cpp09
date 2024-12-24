@@ -1,15 +1,15 @@
 #include "BitcoinExchange.hpp"
 #include <exception>
 #include <limits>
-btc::btc(){}
-btc::~btc(){}
-btc::btc(std::string file_path, std::string csv_path){
+BitcoinExchange::BitcoinExchange(){}
+BitcoinExchange::~BitcoinExchange(){}
+BitcoinExchange::BitcoinExchange(std::string file_path, std::string csv_path){
     data_(csv_path);
     // std::cout << "pass data" << std::endl;
     input_(file_path);
 }
 
-void btc::print(float rate, const std::string date) {
+void BitcoinExchange::print(float rate, const std::string date) {
     std::cout << date << " => ";
     std::map<std::string, float>::iterator it = data.find(date);
     if (it != data.end())
@@ -19,15 +19,15 @@ void btc::print(float rate, const std::string date) {
     std::cout << std::endl;
 }
 
-void btc::parse_file(void){
+void BitcoinExchange::parse_file(void){
 
 }
 
-bool btc::check_month(unsigned int month){
+bool BitcoinExchange::check_month(unsigned int month){
     return (month > 0 && month < 13);
 }
 
-bool btc::isleap(unsigned int year){
+bool BitcoinExchange::isleap(unsigned int year){
     // Return true if year  
     // is a multiple of 4 and 
     // not multiple of 100. 
@@ -37,7 +37,7 @@ bool btc::isleap(unsigned int year){
          (year % 400 == 0)); 
 
 }
-bool btc::check_day(unsigned int day ,unsigned int month , unsigned int year){
+bool BitcoinExchange::check_day(unsigned int day ,unsigned int month , unsigned int year){
         if(day > 31 || day < 1)
             return false;
         else if(month == 2)
@@ -52,11 +52,11 @@ bool btc::check_day(unsigned int day ,unsigned int month , unsigned int year){
         return true;
 }
 
-bool btc::check_year(unsigned int year){
+bool BitcoinExchange::check_year(unsigned int year){
     return ( 2009 < year && year < 9999);
 }
 
-bool btc::check_date(std::string date){
+bool BitcoinExchange::check_date(std::string date){
     // std::cout << "the date is => "<< date << std::endl;
     unsigned int year , month , day;
     char dash1  , dash2 ;
@@ -75,10 +75,10 @@ bool btc::check_date(std::string date){
     }
     return true;
 }
-void btc::err(){
+void BitcoinExchange::err(){
     std::cerr << "Error: " << err_str << std::endl;
 }
-void btc::check_and_print(void){
+void BitcoinExchange::check_and_print(void){
     std::string line;
     std::ifstream file(input_path);
     if(!file.is_open()){
@@ -91,7 +91,8 @@ void btc::check_and_print(void){
         std::strcpy(cstr, line.c_str());
         char *key = strtok(cstr,"|");
         char *value = strtok(NULL,"|");
-        if(!value || !key){
+        if(line.empty()) continue;
+        else if(!value || !key){
             err_str = "bad input ";
             if(!value && key)
                 err_str += " no value";
@@ -113,19 +114,19 @@ void btc::check_and_print(void){
     file.close();
 }
 
-void btc::input_(std::string input){
+void BitcoinExchange::input_(std::string input){
     input_path = input;
     check_and_print();
 }
 
 
-std::ostream &operator<<(std::ostream &o , btc &BTC){
-    (void) BTC;
-    o << "btc\n" ;
+std::ostream &operator<<(std::ostream &o , BitcoinExchange &BitcoinExchange){
+    (void) BitcoinExchange;
+    o << "BitcoinExchange\n" ;
     return o;
 }
 
-bool btc::isdigit_(std::string nbr){
+bool BitcoinExchange::isdigit_(std::string nbr){
     for(unsigned long i = 0 ; i < nbr.size() ;i++)
         if(!isdigit(nbr[i]) && nbr[i] != ' ')
             return false;
@@ -133,7 +134,7 @@ bool btc::isdigit_(std::string nbr){
 
 }
 
-bool btc::isdigit_(std::string nbr,char ignor){
+bool BitcoinExchange::isdigit_(std::string nbr,char ignor){
     for(unsigned long i = 0 ; i < nbr.size() ;i++)
     {
         if(nbr[i]== '-'){
@@ -149,7 +150,7 @@ bool btc::isdigit_(std::string nbr,char ignor){
 
 }
 
-bool btc::check_data(std::string data,int order){
+bool BitcoinExchange::check_data(std::string data,int order){
     if (order == 1 || order == 3){ 
         if( order == 1 && data.size() > 10)
             return false;
@@ -176,7 +177,7 @@ bool btc::check_data(std::string data,int order){
 
 }
 
-void btc::data_(std::string path){
+void BitcoinExchange::data_(std::string path){
     data_path = path;
     std::string line;
     std::ifstream file(data_path);
@@ -214,3 +215,17 @@ void btc::data_(std::string path){
     file.close();
 }
 
+BitcoinExchange::BitcoinExchange(BitcoinExchange &btc) {
+
+    this->data = btc.data;
+
+}
+
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &btc) {
+    if (this == &btc) {
+        return *this;
+    }
+
+    this->data = btc.data;
+    return *this;
+}
